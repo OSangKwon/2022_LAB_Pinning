@@ -1,0 +1,13 @@
+410.bwaves-1963B.champsimtrace.xz
+401.bzip2-226B.champsimtrace.xz
+436.cactusADM-1804B.champsimtrace.xz
+403.gcc-16B.champsimtrace.xz
+459.GemsFDTD-1169B.champsimtrace.xz
+470.lbm-1274B.champsimtrace.xz
+462.libquantum-1343B.champsimtrace.xz
+471.omnetpp-188B.champsimtrace.xz
+450.soplex-247B.champsimtrace.xz
+482.sphinx3-1100B.champsimtrace.xz
+434.zeusmp-10B.champsimtrace.xz
+433.milc-127B.champsimtrace.xz
+437.leslie3d-134B.champsimtrace.xz
