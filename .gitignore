@@ -1,4 +1,9 @@
 gapbs_traces/
 spec06_traces/
 result/
+run_gap.py
+run_spec06.py
+sim_script/
+nohup.out
+.gitignore
 
