@@ -5,5 +5,4 @@ sim_script/
 run_gap.py
 run_spec06.py
 nohup.out
-.gitignore
 
