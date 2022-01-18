@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated>
+      <config projectName="2022_LAB_Pinning" targetName="all" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" ENABLED="true" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="02565433-d4de-4e52-8b07-d52324345c1f" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/branch/bimodal/bimodal.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/btb/basic_btb/basic_btb.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/prefetcher/next_line_l1d/next_line.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/prefetcher/next_line_l2c/next_line.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/prefetcher/next_line_llc/next_line.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/prefetcher/no_l1i/no.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/replacement/lru_llc/lru.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/base_replacement.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/block.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cache.cc" beforeDir="false" afterPath="$PROJECT_DIR$/src/cache.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cache.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core_inst.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dram_controller.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ooo_cpu.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ptw.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/tracereader.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/vmem.d" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../branch/bimodal/bimodal.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../branch/gshare/gshare.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../branch/hashed_perceptron/hashed_perceptron.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../branch/perceptron/perceptron.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../btb/basic_btb/basic_btb.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../champsim_config.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../config.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../inc/block.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../inc/cache.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../inc/champsim.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../inc/circular_buffer.hpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../inc/delay_queue.hpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../inc/dram_controller.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../inc/instruction.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../inc/kpcp.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../inc/memory_class.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../inc/ooo_cpu.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../inc/ptw.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../inc/spp_dev.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../inc/tracereader.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../inc/util.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../inc/vmem.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../prefetcher/ip_stride/ip_stride.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../prefetcher/kpcp/kpcp.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../prefetcher/kpcp/kpcp_util.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../prefetcher/next_line_l1d/next_line.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../prefetcher/next_line_l1i/next_line.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../prefetcher/next_line_l2c/next_line.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../prefetcher/next_line_llc/next_line.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../prefetcher/no_l1d/no.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../prefetcher/no_l1i/no.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../prefetcher/no_l2c/no.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../prefetcher/no_llc/no.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../prefetcher/spp_dev/spp_dev.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../prefetcher/va_ampm_lite/va_ampm_lite.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../replacement/drrip_llc/drrip.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../replacement/lru_llc/lru.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../replacement/ship_llc/ship.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../replacement/srrip_llc/srrip.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../scripts/download_dpc3_traces.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../scripts/dpc3_max_simpoint.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../scripts/multiworkload.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/base_replacement.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/block.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/cache.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/dram_controller.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/ooo_cpu.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/ptw.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/tracereader.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/vmem.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tracer/champsim_tracer.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tracer/clean_tracer.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tracer/make_tracer.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tracer/makefile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tracer/makefile.rules" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tracer/quick_make.sh" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MakefileLocalSettings">
+    <option name="availableProjects">
+      <map>
+        <entry>
+          <key>
+            <ExternalProjectPojo>
+              <option name="name" value="2022_LAB_Pinning" />
+              <option name="path" value="$PROJECT_DIR$" />
+            </ExternalProjectPojo>
+          </key>
+          <value>
+            <list>
+              <ExternalProjectPojo>
+                <option name="name" value="2022_LAB_Pinning" />
+                <option name="path" value="$PROJECT_DIR$" />
+              </ExternalProjectPojo>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="projectSyncType">
+      <map>
+        <entry key="$PROJECT_DIR$" value="RE_IMPORT" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectId" id="23rQkvfbTXvCXmBPfW4wPDDdV2y" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.first.check.clang-format" value="false" />
+    <property name="cidr.known.project.marker" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+  </component>
+  <component name="RunManager">
+    <configuration name="all" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="2022_LAB_Pinning" TARGET_NAME="all" CONFIG_NAME="all" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="02565433-d4de-4e52-8b07-d52324345c1f" name="Default Changelist" comment="" />
+      <created>1642489872426</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1642489872426</updated>
+      <workItem from="1642489873734" duration="657000" />
+      <workItem from="1642491430787" duration="509000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

@@ -7,6 +7,7 @@
 #include "champsim_constants.h"
 #include "util.h"
 #include "vmem.h"
+#include <cmath>
 
 #ifndef SANITY_CHECK
 #define NDEBUG
@@ -14,7 +15,7 @@
 
 
 #define PIN_THRESHOLD 8
-
+#define BIT_MASK pow(2,12)-1
 uint64_t l2pf_access = 0;
 
 extern VirtualMemory vmem;
@@ -409,16 +410,19 @@ bool CACHE::filllike_miss(std::size_t set, std::size_t way, PACKET &handle_pkt)
             auto first_inv = std::find_if(set_begin, set_end, is_pin<BLOCK>());
             uint32_t way_pin = std::distance(set_begin, first_inv);
 
-            // handle_pkt.address >> 3 & (2^12 -1)
+            // (handle_pkt.address >> 3) & (2^12 -1)
+            int64_t idx = handle_pkt.address >>3;
+            idx = idx & (int64_t)BIT_MASK;
+
             if (handle_pkt.type == TRANSLATION) {
-                if (llc_history_t.find(handle_pkt.address) == llc_history_t.end())
-                    llc_history_t.insert({handle_pkt.address, 1});
+                if (llc_history_t.find(idx) == llc_history_t.end())
+                    llc_history_t.insert({idx, 1});
                 else
-                    llc_history_t[handle_pkt.address] += 1;
+                    llc_history_t[idx] += 1;
 
-                if (set_begin->miss_rate > 0.9 && llc_history_t[handle_pkt.address] > 100) {
+                if (set_begin->miss_rate > 0.9 && llc_history_t[idx] > 100) {
 
-                    llc_history_t[handle_pkt.address] = 0;
+                    //llc_history_t[handle_pkt.address] = 0;
                     fill_block.pin = true;
                     set_begin->pin_cnt += 1;
                     if(set_begin->pin_cnt > PIN_THRESHOLD) {
@@ -429,6 +433,7 @@ bool CACHE::filllike_miss(std::size_t set, std::size_t way, PACKET &handle_pkt)
                         BLOCK &pin_block = block[set*NUM_WAY + pin_way];
                         pin_block.pin = false;
                         set_begin->pin_cnt -=1;
+                        llc_history_t[idx] = 0;
                     }
 
                 }
