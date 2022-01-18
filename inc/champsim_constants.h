@@ -130,7 +130,7 @@
 #define PTW_MAX_WRITE 2u
 
 #define LLC_SET 2048u
-#define LLC_WAY 10u
+#define LLC_WAY 16u
 #define LLC_WQ_SIZE 32u
 #define LLC_RQ_SIZE 32u
 #define LLC_PQ_SIZE 32u

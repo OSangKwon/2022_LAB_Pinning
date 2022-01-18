@@ -10,7 +10,7 @@
 #include "vmem.h"
 #include "champsim_constants.h"
 #include <vector>
-CACHE LLC("LLC", 2048, 10, 32, 32, 32, 64, 19, 1, 1, 1, 1, 1);
+CACHE LLC("LLC", 2048, 16, 32, 32, 32, 64, 19, 1, 1, 1, 1, 1);
 std::vector<O3_CPU> ooo_cpu {  };
 MEMORY_CONTROLLER DRAM("DRAM");
 VirtualMemory vmem(NUM_CPUS, 8589934592, PAGE_SIZE, 5, 1);

@@ -75,16 +75,12 @@ struct lru_comparator
     {
         is_valid<first_argument_type> first_validtest;
         is_valid<second_argument_type> second_validtest;
-        //is_pin<first_argument_type> first_pintest;
-        //is_pin<second_argument_type> second_pintest;
-        //return !second_pintest(rhs)|| !second_validtest(rhs) || ((first_pintest(lhs) && (first_validtest(lhs))) && lhs.lru < rhs.lru);
         return !second_validtest(rhs) || (first_validtest(lhs) && lhs.lru < rhs.lru);
     }
 };
 
-/*
 template <typename T, typename U = T>
-struct dead_comparator
+struct llc_lru_comparator
 {
     using first_argument_type = T;
     using second_argument_type = U;
@@ -92,10 +88,27 @@ struct dead_comparator
     {
         is_valid<first_argument_type> first_validtest;
         is_valid<second_argument_type> second_validtest;
-        return !second_validtest(rhs) || (first_validtest(lhs) && lhs.access_bit > rhs.access_bit);
+        is_pin<first_argument_type> first_pintest;
+        is_pin<second_argument_type> second_pintest;
+        return !second_pintest(rhs)|| !second_validtest(rhs) || ((first_pintest(lhs) && (first_validtest(lhs))) && lhs.lru < rhs.lru);
+
     }
 };
-*/
+
+template <typename T, typename U = T>
+struct pin_comparator
+{
+    using first_argument_type = T;
+    using second_argument_type = U;
+    bool operator()(const first_argument_type &lhs, const second_argument_type &rhs)
+    {
+        is_pin<first_argument_type> first_pintest;
+        is_pin<second_argument_type> second_pintest;
+        return (second_pintest(rhs) && first_pintest(lhs) && lhs.lru < rhs.lru)|| (second_pintest(rhs) && !first_pintest(lhs));
+    }
+};
+
+
 
 /*
  * A functor to reorder elements to a new LRU order.

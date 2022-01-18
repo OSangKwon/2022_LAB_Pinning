@@ -7,10 +7,24 @@
 
 uint32_t CACHE::lru_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type)
 {
-    // IS LLC comparator seperating
+
     return std::distance(current_set, std::max_element(current_set, std::next(current_set, NUM_WAY), lru_comparator<BLOCK, BLOCK>()));
 
 }
+
+uint32_t CACHE::llc_lru_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type)
+{
+
+    return std::distance(current_set, std::max_element(current_set, std::next(current_set, NUM_WAY), llc_lru_comparator<BLOCK, BLOCK>()));
+
+}
+
+uint32_t CACHE::pin_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type)
+{
+
+    return std::distance(current_set, std::max_element(current_set, std::next(current_set, NUM_WAY), pin_comparator<BLOCK, BLOCK>()));
+}
+
 
 void CACHE::lru_update(uint32_t set, uint32_t way, uint32_t type, uint8_t hit)
 {

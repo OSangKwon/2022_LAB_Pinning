@@ -50,6 +50,7 @@ void PageTableWalker::handle_read()
 				next_address = address_pscl2 << LOG2_PAGE_SIZE | (get_offset(handle_pkt.full_addr,IS_PTL1) << 3);				
             	packet.translation_level = 1;
             	PSCL2.hit ++; PSCL3.access --; PSCL4.access --; PSCL5.access --;
+                //packet.check_pte_read = 1;
 
 			}
 			else if(address_pscl3 != UINT64_MAX)
@@ -79,7 +80,7 @@ void PageTableWalker::handle_read()
 
             packet.init_translation_level = packet.translation_level;
 			packet.address = next_address >> LOG2_BLOCK_SIZE;
-            packet.full_addr = next_address;
+            packet.full_addr = next_address; packet.check_pte_read = 1;
 
 			packet.to_return.clear();
 			packet.to_return = {this}; //Return this packet to PTW after completion.

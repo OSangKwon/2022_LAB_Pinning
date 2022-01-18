@@ -7,18 +7,21 @@
 #include "champsim_constants.h"
 #include "util.h"
 #include "vmem.h"
-#include <map>
 
 #ifndef SANITY_CHECK
 #define NDEBUG
 #endif
+
+
+#define PIN_THRESHOLD 8
 
 uint64_t l2pf_access = 0;
 
 extern VirtualMemory vmem;
 extern uint64_t current_core_cycle[NUM_CPUS];
 extern uint8_t  warmup_complete[NUM_CPUS];
-extern map<uint64_t,int> pte_block_count;
+extern map<uint64_t,int>llc_history_t;
+
 void CACHE::handle_fill()
 {
     while (writes_available_this_cycle > 0)
@@ -36,11 +39,12 @@ void CACHE::handle_fill()
         auto first_inv = std::find_if_not(set_begin, set_end, is_valid<BLOCK>());
         uint32_t way = std::distance(set_begin, first_inv);
         if (way == NUM_WAY) {
+
             way = find_victim(fill_mshr->cpu, fill_mshr->instr_id, set, &block.data()[set * NUM_WAY], fill_mshr->ip,
                               fill_mshr->full_addr, fill_mshr->type);
 
-
         }
+
 
         bool success = filllike_miss(set, way, *fill_mshr);
         if (!success)
@@ -86,11 +90,9 @@ void CACHE::handle_writeback()
             sim_hit[handle_pkt.cpu][handle_pkt.type]++;
             sim_access[handle_pkt.cpu][handle_pkt.type]++;
 
-            if(cache_type == IS_LLC && handle_pkt.type == TRANSLATION && warmup_complete[handle_pkt.cpu])
-            {
-                //std::cout << "ADP,"<<handle_pkt.address<<","<<current_core_cycle[handle_pkt.cpu]<<std::endl;
-            }
-
+            BLOCK &temp = block[set*NUM_WAY];
+            temp.access_count++;
+            temp.miss_rate = (double)temp.miss_count/(double)temp.access_count;
 
 
             // mark dirty
@@ -232,14 +234,9 @@ void CACHE::readlike_hit(std::size_t set, std::size_t way, PACKET &handle_pkt)
     // COLLECT STATS
     sim_hit[handle_pkt.cpu][handle_pkt.type]++;
     sim_access[handle_pkt.cpu][handle_pkt.type]++;
-    //add code
-
-    if(cache_type == IS_LLC && handle_pkt.type == TRANSLATION && warmup_complete[handle_pkt.cpu])
-    {
-        //std::cout << "ADP,"<<handle_pkt.address<<","<<current_core_cycle[handle_pkt.cpu]<<std::endl;
-    }
-
-
+    BLOCK &temp = block[set*NUM_WAY];
+    temp.access_count++;
+    temp.miss_rate = (double)temp.miss_count/(double)temp.access_count;
 
 
     for (auto ret : handle_pkt.to_return)
@@ -346,6 +343,7 @@ bool CACHE::filllike_miss(std::size_t set, std::size_t way, PACKET &handle_pkt)
 
 
 
+
     bool evicting_dirty = !bypass && (lower_level != NULL) && fill_block.dirty;
     auto evicting_address = bypass ? 0 : (virtual_prefetch ? fill_block.v_address : fill_block.address);
 
@@ -392,20 +390,54 @@ bool CACHE::filllike_miss(std::size_t set, std::size_t way, PACKET &handle_pkt)
         if (handle_pkt.type == PREFETCH)
             pf_fill++;
 
+
         //add code os
         fill_block.valid = true;
+        if(fill_block.pin == true)
+        {
+            auto set_begin = std::next(std::begin(block), set * NUM_WAY);
+            set_begin->pin_cnt -=1;
+        }
+
+
+        fill_block.pin = false;
+
+        if(warmup_complete[handle_pkt.cpu] && cache_type == IS_LLC) {
+
+            auto set_begin = std::next(std::begin(block), set * NUM_WAY);
+            auto set_end = std::next(set_begin, NUM_WAY);
+            auto first_inv = std::find_if(set_begin, set_end, is_pin<BLOCK>());
+            uint32_t way_pin = std::distance(set_begin, first_inv);
+
+            // handle_pkt.address >> 3 & (2^12 -1)
+            if (handle_pkt.type == TRANSLATION) {
+                if (llc_history_t.find(handle_pkt.address) == llc_history_t.end())
+                    llc_history_t.insert({handle_pkt.address, 1});
+                else
+                    llc_history_t[handle_pkt.address] += 1;
+
+                if (set_begin->miss_rate > 0.9 && llc_history_t[handle_pkt.address] > 100) {
+
+                    llc_history_t[handle_pkt.address] = 0;
+                    fill_block.pin = true;
+                    set_begin->pin_cnt += 1;
+                    if(set_begin->pin_cnt > PIN_THRESHOLD) {
+                        //uint32_t set = get_set(handle_pkt.address);
+                        uint32_t pin_way;
+                        pin_way = find_pin_victim(handle_pkt.cpu, handle_pkt.instr_id, set, &block.data()[set * NUM_WAY],handle_pkt.ip,handle_pkt.full_addr, handle_pkt.type);
+
+                        BLOCK &pin_block = block[set*NUM_WAY + pin_way];
+                        pin_block.pin = false;
+                        set_begin->pin_cnt -=1;
+                    }
+
+                }
+            }
+        }
 
         fill_block.prefetch = (handle_pkt.type == PREFETCH && handle_pkt.pf_origin_level == fill_level);
         fill_block.dirty = (handle_pkt.type == WRITEBACK || (handle_pkt.type == RFO && handle_pkt.to_return.empty()));
         fill_block.address = handle_pkt.address;
-        if(handle_pkt.type == TRANSLATION && cache_type == IS_LLC && warmup_complete[handle_pkt.cpu])
-        {
-            if(pte_block_count.find(handle_pkt.address) == pte_block_count.end())
-                pte_block_count.insert({handle_pkt.address,1});
-            else {
-                pte_block_count[handle_pkt.address] += 1;
-            }
-        }
         fill_block.full_addr = handle_pkt.full_addr;
         fill_block.v_address = handle_pkt.v_address;
         fill_block.full_v_addr = handle_pkt.full_v_addr;
@@ -413,6 +445,7 @@ bool CACHE::filllike_miss(std::size_t set, std::size_t way, PACKET &handle_pkt)
         fill_block.ip = handle_pkt.ip;
         fill_block.cpu = handle_pkt.cpu;
         fill_block.instr_id = handle_pkt.instr_id;
+
     }
 
     if(warmup_complete[handle_pkt.cpu] && (handle_pkt.cycle_enqueued != 0))
@@ -438,12 +471,11 @@ bool CACHE::filllike_miss(std::size_t set, std::size_t way, PACKET &handle_pkt)
     // COLLECT STATS
     sim_miss[handle_pkt.cpu][handle_pkt.type]++;
     sim_access[handle_pkt.cpu][handle_pkt.type]++;
+    BLOCK &temp = block[set*NUM_WAY];
 
-    if(cache_type == IS_LLC && handle_pkt.type == TRANSLATION && warmup_complete[handle_pkt.cpu])
-    {
-        //std::cout << "ADP,"<<handle_pkt.address<<","<<current_core_cycle[handle_pkt.cpu]<<std::endl;
-    }
-
+    temp.access_count++;
+    temp.miss_count++;
+    temp.miss_rate = (double)temp.miss_count/(double)temp.access_count;
 
 
     return true;
@@ -548,7 +580,7 @@ int CACHE::add_rq(PACKET *packet)
 
     // if there is no duplicate, add it to RQ
     if (warmup_complete[cpu])
-        RQ.push_back(*packet);
+        RQ.push_back_cache(*packet);
     else
         RQ.push_back_ready(*packet);
 
@@ -588,7 +620,7 @@ int CACHE::add_wq(PACKET *packet)
 
     // if there is no duplicate, add it to the write queue
     if (warmup_complete[cpu])
-        WQ.push_back(*packet);
+        WQ.push_back_cache(*packet);
     else
         WQ.push_back_ready(*packet);
 
@@ -624,7 +656,7 @@ int CACHE::prefetch_line(uint64_t ip, uint64_t base_addr, uint64_t pf_addr, int 
     {
         if (!VAPQ.full())
         {
-            VAPQ.push_back(pf_packet);
+            VAPQ.push_back_cache(pf_packet);
             return 1;
         }
     }
@@ -745,7 +777,7 @@ int CACHE::add_pq(PACKET *packet)
 
     // if there is no duplicate, add it to PQ
     if (warmup_complete[cpu])
-        PQ.push_back(*packet);
+        PQ.push_back_cache(*packet);
     else
         PQ.push_back_ready(*packet);
 

@@ -108,8 +108,26 @@ namespace champsim {
              ***/
 
             void push_back(const T& item) { _buf.push_back(item); _delays.push_back(_latency); }
-            void push_back(const T&& item) { _buf.push_back(std::forward<T>(item)); _delays.push_back(_latency); }
+            void push_back_cache(const T& item) {
+                if(item.check_pte_read == 1 && _latency > USER_LATENCY){
+                    _buf.push_back(item); _delays.push_back(USER_LATENCY);
 
+                }
+                else{
+                    _buf.push_back(item); _delays.push_back(_latency);
+                }
+            }
+
+            void push_back(const T&& item) { _buf.push_back(std::forward<T>(item)); _delays.push_back(_latency); }
+            void push_back_cache(const T&& item) {
+                if(item.check_pte_read == 1 && _latency > USER_LATENCY){
+                    _buf.push_back(std::forward<T>(item)); _delays.push_back(USER_LATENCY);
+                }
+                else{
+                    _buf.push_back(std::forward<T>(item)); _delays.push_back(_latency);
+
+                }
+            }
 
             /***
              * Pops the element off of the front.

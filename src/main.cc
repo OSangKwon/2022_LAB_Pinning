@@ -5,7 +5,6 @@
 #include <signal.h>
 #include <string.h>
 #include <vector>
-#include <map>
 
 #include "champsim_constants.h"
 #include "dram_controller.h"
@@ -13,7 +12,7 @@
 #include "vmem.h"
 #include "tracereader.h"
 #include <set>
-#include <stdlib.h>
+#include <map>
 
 
 #define DRAM_SIZE (DRAM_CHANNELS*DRAM_RANKS*DRAM_BANKS*DRAM_ROWS*DRAM_ROW_SIZE/1024)
@@ -21,10 +20,8 @@
 
 using namespace std;
 set<int> pa_record;
-map<uint64_t,int> pte_block_count;
-
-
-uint8_t warmup_complete[NUM_CPUS],
+map<uint64_t,int> llc_history_t;
+uint8_t warmup_complete[NUM_CPUS], 
         simulation_complete[NUM_CPUS], 
         all_warmup_complete = 0, 
         all_simulation_complete = 0,
@@ -46,12 +43,6 @@ extern std::vector<O3_CPU> ooo_cpu;
 extern uint64_t current_core_cycle[NUM_CPUS];
 
 std::vector<tracereader*> traces;
-
-void print_map(std::map<uint64_t,int>& m) {
-    for (std::map<uint64_t,int>::iterator itr = m.begin(); itr != m.end(); ++itr) {
-        std::cout <<"BC,"<<itr->first << "," << itr->second << std::endl;
-    }
-}
 
 void record_roi_stats(uint32_t cpu, CACHE *cache)
 {
@@ -530,7 +521,7 @@ int main(int argc, char** argv)
 
         using namespace std::placeholders;
         LLC.find_victim = std::bind(&CACHE::llc_find_victim, &LLC, _1, _2, _3, _4, _5, _6, _7);
-        //LLC.find_dead = std::bind(&CACHE::llc_find_dead, &LLC, _1, _2, _3, _4, _5, _6, _7);
+        LLC.find_pin_victim = std::bind(&CACHE::llc_find_pin_victim, &LLC, _1, _2, _3, _4, _5, _6, _7);
         LLC.update_replacement_state = std::bind(&CACHE::llc_update_replacement_state, &LLC, _1, _2, _3, _4, _5, _6, _7, _8);
         LLC.replacement_final_stats = std::bind(&CACHE::lru_final_stats, &LLC);
 
@@ -726,7 +717,6 @@ int main(int argc, char** argv)
     LLC.llc_replacement_final_stats();
     print_dram_stats();
     print_branch_stats();
-    //print_map(pte_block_count);
 #endif
 
     return 0;

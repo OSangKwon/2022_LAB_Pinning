@@ -46,6 +46,7 @@ class PACKET {
              instr_id = 0,
              ip = 0,
              event_cycle = std::numeric_limits<uint64_t>::max(),
+             check_pte_read = 0,
              cycle_enqueued = 0;
 
     std::list<MemoryRequestProducer*> to_return;

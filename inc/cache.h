@@ -40,6 +40,7 @@ class CACHE : public MemoryRequestConsumer, public MemoryRequestProducer {
     const bool prefetch_as_load;
     const bool virtual_prefetch;
 
+
     // prefetch stats
     uint64_t pf_requested = 0,
              pf_issued = 0,
@@ -151,13 +152,15 @@ class CACHE : public MemoryRequestConsumer, public MemoryRequestProducer {
     void llc_update_replacement_state(uint32_t cpu, uint32_t set, uint32_t way, uint64_t full_addr, uint64_t ip, uint64_t victim_addr, uint32_t type, uint8_t hit);
 
     std::function<uint32_t(uint32_t, uint64_t, uint32_t, const BLOCK*, uint64_t, uint64_t, uint32_t)> find_victim;
-    std::function<uint32_t(uint32_t, uint64_t, uint32_t, const BLOCK*, uint64_t, uint64_t, uint32_t)> find_dead;
+    std::function<uint32_t(uint32_t, uint64_t, uint32_t, const BLOCK*, uint64_t, uint64_t, uint32_t)> find_pin_victim;
     uint32_t llc_find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type);
-    //uint32_t llc_find_dead(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type);
+    uint32_t llc_find_pin_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type);
+
 
     void lru_initialize();
     uint32_t lru_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type);
-    //uint32_t dead_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type);
+    uint32_t llc_lru_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type);
+    uint32_t pin_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type);
     void lru_update(uint32_t set, uint32_t way, uint32_t type, uint8_t hit);
     void lru_final_stats();
 };

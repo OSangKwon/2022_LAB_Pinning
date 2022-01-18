@@ -139,7 +139,7 @@
 
     "LLC": {
         "sets": 2048,
-        "ways": 10,
+        "ways": 16,
         "rq_size": 32,
         "wq_size": 32,
         "pq_size": 32,

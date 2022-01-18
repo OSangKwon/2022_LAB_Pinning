@@ -28,6 +28,7 @@ class BLOCK {
          dirty = false,
          pin = false;
 
+    uint8_t pin_cnt = 0;
 
     uint64_t address = 0,
              full_addr = 0,
@@ -38,6 +39,12 @@ class BLOCK {
              cpu = 0,
              instr_id = 0;
 
+    // dead block prediction
+    //int access_bit = 0;
+    // access info
+    int access_count = 0;
+    int miss_count = 0 ;
+    double miss_rate = 0;
 
     // replacement state
     uint32_t lru = std::numeric_limits<uint32_t>::max() >> 1;
