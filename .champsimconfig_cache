@@ -1,0 +1,1 @@
+{"cpu0l1iprefetcher.a": "prefetcher/no_l1i", "cpu0l1dprefetcher.a": "prefetcher/next_line_l1d", "cpu0l2cprefetcher.a": "prefetcher/next_line_l2c", "cpu0branch_predictor.a": "branch/bimodal", "cpu0btb.a": "btb/basic_btb", "cpu0llprefetcher.a": "prefetcher/next_line_llc", "cpu0llreplacement.a": "replacement/lru_llc"}

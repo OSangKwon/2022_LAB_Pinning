@@ -420,7 +420,7 @@ bool CACHE::filllike_miss(std::size_t set, std::size_t way, PACKET &handle_pkt)
                 else
                     llc_history_t[idx] += 1;
 
-                if (set_begin->miss_rate > 0.9 && llc_history_t[idx] > 100) {
+                if (set_begin->miss_rate > 0.9 && llc_history_t[idx] > 50) {
 
                     //llc_history_t[handle_pkt.address] = 0;
                     fill_block.pin = true;
