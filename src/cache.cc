@@ -411,8 +411,9 @@ bool CACHE::filllike_miss(std::size_t set, std::size_t way, PACKET &handle_pkt)
             uint32_t way_pin = std::distance(set_begin, first_inv);
 
             // (handle_pkt.address >> 3) & (2^12 -1)
-            int64_t idx = handle_pkt.address >>3;
-            idx = idx & (int64_t)BIT_MASK;
+            //int64_t idx = handle_pkt.address >>3;
+            int64_t idx = handle_pkt.address;
+	    idx = idx & (int64_t)BIT_MASK;
 
             if (handle_pkt.type == TRANSLATION) {
                 if (llc_history_t.find(idx) == llc_history_t.end())
@@ -420,7 +421,7 @@ bool CACHE::filllike_miss(std::size_t set, std::size_t way, PACKET &handle_pkt)
                 else
                     llc_history_t[idx] += 1;
 
-                if (set_begin->miss_rate > 0.9 && llc_history_t[idx] > 50) {
+                if (set_begin->miss_rate > 0.9 && llc_history_t[idx] > 100) {
 
                     //llc_history_t[handle_pkt.address] = 0;
                     fill_block.pin = true;
