@@ -125,15 +125,15 @@ uint32_t CACHE::llc_find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, B
     
             if (rrpv[set][i] == maxRRPV){
 		
-		/*
-		if(current_set[i].pin ==false)
+		
+		if(current_set[i].pin == 0 )
                 	return i;
 		else{
-			current_set[i].pin = false;
-			llc_history_t[idx] = 0;
+			current_set[i].pin -= 1;
+			if(current_set[i].pin == 0){ 
+				llc_history_t[idx] = 0;
+			}
 		}
-		*/
-		return i;
 		
 	    }
 	

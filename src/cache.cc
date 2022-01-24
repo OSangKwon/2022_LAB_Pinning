@@ -238,7 +238,9 @@ void CACHE::readlike_hit(std::size_t set, std::size_t way, PACKET &handle_pkt)
     BLOCK &temp = block[set*NUM_WAY];
     temp.access_count++;
     temp.miss_rate = (double)temp.miss_count/(double)temp.access_count;
-
+    
+    if(handle_pkt.type == TRANSLATION)
+    	hit_block.pin += 1;
 
     for (auto ret : handle_pkt.to_return)
         ret->return_data(&handle_pkt);
@@ -394,7 +396,7 @@ bool CACHE::filllike_miss(std::size_t set, std::size_t way, PACKET &handle_pkt)
 
         //add code os
         fill_block.valid = true;
-        fill_block.pin = false;
+        fill_block.pin = 0;
 
         if(warmup_complete[handle_pkt.cpu] && cache_type == IS_LLC) {
 
@@ -415,7 +417,7 @@ bool CACHE::filllike_miss(std::size_t set, std::size_t way, PACKET &handle_pkt)
                     llc_history_t[idx] += 1;
 
                 if (set_begin->miss_rate > 0.9 && llc_history_t[idx] > 50) {
-                    fill_block.pin = true;
+                    fill_block.pin = 16;
 
                 }
             }

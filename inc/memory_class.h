@@ -25,8 +25,8 @@ class BLOCK {
   public:
     bool valid = false,
          prefetch = false,
-         dirty = false,
-         pin = false;
+         dirty = false;
+    uint8_t pin = 0;
 
     uint8_t pin_cnt = 0;
 
