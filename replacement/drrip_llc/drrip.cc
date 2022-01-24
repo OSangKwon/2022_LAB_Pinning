@@ -123,9 +123,7 @@ uint32_t CACHE::llc_find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, B
 	    int64_t idx = current_set[i].address;
 	    idx = idx & (int64_t)BIT_MASK;
     
-            if (rrpv[set][i] == maxRRPV){
-		
-		
+            if (rrpv[set][i] == maxRRPV){	
 		if(current_set[i].pin == 0 )
                 	return i;
 		else{
@@ -138,8 +136,11 @@ uint32_t CACHE::llc_find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, B
 	    }
 	
 	}
-        for (int i=0; i<LLC_WAY; i++)
-            rrpv[set][i]++;
+        for (int i=0; i<LLC_WAY; i++){
+		if(rrpv[set][i] < maxRRPV){
+            		rrpv[set][i]++;
+		}
+	}
     }
 
     // WE SHOULD NOT REACH HERE
