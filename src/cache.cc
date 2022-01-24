@@ -394,13 +394,6 @@ bool CACHE::filllike_miss(std::size_t set, std::size_t way, PACKET &handle_pkt)
 
         //add code os
         fill_block.valid = true;
-        if(fill_block.pin == true)
-        {
-            auto set_begin = std::next(std::begin(block), set * NUM_WAY);
-            set_begin->pin_cnt -=1;
-        }
-
-
         fill_block.pin = false;
 
         if(warmup_complete[handle_pkt.cpu] && cache_type == IS_LLC) {
@@ -421,21 +414,8 @@ bool CACHE::filllike_miss(std::size_t set, std::size_t way, PACKET &handle_pkt)
                 else
                     llc_history_t[idx] += 1;
 
-                if (set_begin->miss_rate > 0.9 && llc_history_t[idx] > 100) {
-
-                    //llc_history_t[handle_pkt.address] = 0;
+                if (set_begin->miss_rate > 0.9 && llc_history_t[idx] > 50) {
                     fill_block.pin = true;
-                    set_begin->pin_cnt += 1;
-                    if(set_begin->pin_cnt > PIN_THRESHOLD) {
-                        //uint32_t set = get_set(handle_pkt.address);
-                        uint32_t pin_way;
-                        pin_way = find_pin_victim(handle_pkt.cpu, handle_pkt.instr_id, set, &block.data()[set * NUM_WAY],handle_pkt.ip,handle_pkt.full_addr, handle_pkt.type);
-
-                        BLOCK &pin_block = block[set*NUM_WAY + pin_way];
-                        pin_block.pin = false;
-                        set_begin->pin_cnt -=1;
-                        llc_history_t[idx] = 0;
-                    }
 
                 }
             }

@@ -24,10 +24,10 @@ clean:
 	 find branch/bimodal -name \*.d -delete
 	 find btb/basic_btb -name \*.o -delete
 	 find btb/basic_btb -name \*.d -delete
-	 find prefetcher/next_line_llc -name \*.o -delete
-	 find prefetcher/next_line_llc -name \*.d -delete
-	 find replacement/lru_llc -name \*.o -delete
-	 find replacement/lru_llc -name \*.d -delete
+	 find prefetcher/no_llc -name \*.o -delete
+	 find prefetcher/no_llc -name \*.d -delete
+	 find replacement/drrip_llc -name \*.o -delete
+	 find replacement/drrip_llc -name \*.d -delete
 
 bin/champsim: $(patsubst %.cc,%.o,$(wildcard src/*.cc)) obj/cpu0l1iprefetcher.a obj/cpu0l1dprefetcher.a obj/cpu0l2cprefetcher.a obj/cpu0branch_predictor.a obj/cpu0btb.a obj/cpu0llprefetcher.a obj/cpu0llreplacement.a
 	$(CXX) $(LDFLAGS) -o $@ $^ $(LDLIBS)
@@ -62,15 +62,15 @@ obj/cpu0btb.a: $(patsubst %.cc,%.o,$(wildcard btb/basic_btb/*.cc)) $(patsubst %.
 	@mkdir -p $(dir $@)
 	ar -rcs $@ $^
 
-prefetcher/next_line_llc/%.o: CFLAGS += -Iprefetcher/next_line_llc
-prefetcher/next_line_llc/%.o: CXXFLAGS += -Iprefetcher/next_line_llc
-obj/cpu0llprefetcher.a: $(patsubst %.cc,%.o,$(wildcard prefetcher/next_line_llc/*.cc)) $(patsubst %.c,%.o,$(wildcard prefetcher/next_line_llc/*.c))
+prefetcher/no_llc/%.o: CFLAGS += -Iprefetcher/no_llc
+prefetcher/no_llc/%.o: CXXFLAGS += -Iprefetcher/no_llc
+obj/cpu0llprefetcher.a: $(patsubst %.cc,%.o,$(wildcard prefetcher/no_llc/*.cc)) $(patsubst %.c,%.o,$(wildcard prefetcher/no_llc/*.c))
 	@mkdir -p $(dir $@)
 	ar -rcs $@ $^
 
-replacement/lru_llc/%.o: CFLAGS += -Ireplacement/lru_llc
-replacement/lru_llc/%.o: CXXFLAGS += -Ireplacement/lru_llc
-obj/cpu0llreplacement.a: $(patsubst %.cc,%.o,$(wildcard replacement/lru_llc/*.cc)) $(patsubst %.c,%.o,$(wildcard replacement/lru_llc/*.c))
+replacement/drrip_llc/%.o: CFLAGS += -Ireplacement/drrip_llc
+replacement/drrip_llc/%.o: CXXFLAGS += -Ireplacement/drrip_llc
+obj/cpu0llreplacement.a: $(patsubst %.cc,%.o,$(wildcard replacement/drrip_llc/*.cc)) $(patsubst %.c,%.o,$(wildcard replacement/drrip_llc/*.c))
 	@mkdir -p $(dir $@)
 	ar -rcs $@ $^
 

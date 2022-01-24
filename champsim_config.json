@@ -149,8 +149,8 @@
         "max_write": 1,
         "prefetch_as_load": true,
         "virtual_prefetch": true,
-        "prefetcher": "next_line_llc",
-        "replacement": "lru_llc"
+        "prefetcher": "no_llc",
+        "replacement": "drrip_llc"
     },
 
     "physical_memory": {

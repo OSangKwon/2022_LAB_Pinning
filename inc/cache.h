@@ -151,10 +151,10 @@ class CACHE : public MemoryRequestConsumer, public MemoryRequestProducer {
     std::function<void(uint32_t, uint32_t, uint32_t, uint64_t, uint64_t, uint64_t, uint32_t, uint8_t)> update_replacement_state;
     void llc_update_replacement_state(uint32_t cpu, uint32_t set, uint32_t way, uint64_t full_addr, uint64_t ip, uint64_t victim_addr, uint32_t type, uint8_t hit);
 
-    std::function<uint32_t(uint32_t, uint64_t, uint32_t, const BLOCK*, uint64_t, uint64_t, uint32_t)> find_victim;
-    std::function<uint32_t(uint32_t, uint64_t, uint32_t, const BLOCK*, uint64_t, uint64_t, uint32_t)> find_pin_victim;
-    uint32_t llc_find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type);
-    uint32_t llc_find_pin_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type);
+    std::function<uint32_t(uint32_t, uint64_t, uint32_t,  BLOCK*, uint64_t, uint64_t, uint32_t)> find_victim;
+    //std::function<uint32_t(uint32_t, uint64_t, uint32_t,  BLOCK*, uint64_t, uint64_t, uint32_t)> find_pin_victim;
+    uint32_t llc_find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set,  BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type);
+    //uint32_t llc_find_pin_victim(uint32_t cpu, uint64_t instr_id, uint32_t set,  BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type);
 
 
     void lru_initialize();

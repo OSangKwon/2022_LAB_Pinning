@@ -1,4 +1,6 @@
 #include "cache.h"
+#include <cmath>
+#include <map>
 
 #define maxRRPV 3
 #define NUM_POLICY 2
@@ -8,6 +10,10 @@
 #define PSEL_WIDTH 10
 #define PSEL_MAX ((1<<PSEL_WIDTH)-1)
 #define PSEL_THRS PSEL_MAX/2
+#define BIT_MASK pow(2,12)-1                                                                                                                    
+
+
+extern map<uint64_t,int>llc_history_t;
 
 uint32_t rrpv[LLC_SET][LLC_WAY],
          bip_counter = 0,
@@ -108,15 +114,30 @@ void CACHE::llc_update_replacement_state(uint32_t cpu, uint32_t set, uint32_t wa
 }
 
 // find replacement victim
-uint32_t CACHE::llc_find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type)
+uint32_t CACHE::llc_find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type)
 {
     // look for the maxRRPV line
     while (1)
     {
-        for (int i=0; i<LLC_WAY; i++)
-            if (rrpv[set][i] == maxRRPV)
-                return i;
-
+        for (int i=0; i<LLC_WAY; i++){
+	    int64_t idx = current_set[i].address;
+	    idx = idx & (int64_t)BIT_MASK;
+    
+            if (rrpv[set][i] == maxRRPV){
+		
+		/*
+		if(current_set[i].pin ==false)
+                	return i;
+		else{
+			current_set[i].pin = false;
+			llc_history_t[idx] = 0;
+		}
+		*/
+		return i;
+		
+	    }
+	
+	}
         for (int i=0; i<LLC_WAY; i++)
             rrpv[set][i]++;
     }
