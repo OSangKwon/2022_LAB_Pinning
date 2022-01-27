@@ -30,7 +30,7 @@ class CacheBus : public MemoryRequestProducer
 class O3_CPU {
   public:
     uint32_t cpu = 0;
-
+    int interval = 0;
     // trace
     FILE *trace_file = NULL;
     char trace_string[1024];
@@ -201,6 +201,7 @@ class O3_CPU {
          do_sq_forward_to_lq(LSQ_ENTRY &sq_entry, LSQ_ENTRY &lq_entry);
 
     void initialize_core();
+    void update_pin_threshold(CACHE *cache);
     void add_load_queue(champsim::circular_buffer<ooo_model_instr>::iterator rob_index, uint32_t data_index),
          add_store_queue(champsim::circular_buffer<ooo_model_instr>::iterator rob_index, uint32_t data_index);
     void execute_store(std::vector<LSQ_ENTRY>::iterator sq_it);

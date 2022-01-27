@@ -42,6 +42,7 @@ extern std::vector<O3_CPU> ooo_cpu;
 
 extern uint64_t current_core_cycle[NUM_CPUS];
 
+
 std::vector<tracereader*> traces;
 
 void record_roi_stats(uint32_t cpu, CACHE *cache)

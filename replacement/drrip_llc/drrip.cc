@@ -1,4 +1,11 @@
 #include "cache.h"
+#include <cmath>
+#include <map>
+
+#include <algorithm>
+#include <iterator>
+#include "champsim_constants.h"
+#include "util.h"
 
 #define maxRRPV 3
 #define NUM_POLICY 2
@@ -8,6 +15,10 @@
 #define PSEL_WIDTH 10
 #define PSEL_MAX ((1<<PSEL_WIDTH)-1)
 #define PSEL_THRS PSEL_MAX/2
+#define BIT_MASK pow(2,12)-1                                                                                                                    
+
+
+extern map<uint64_t,int>llc_history_t;
 
 uint32_t rrpv[LLC_SET][LLC_WAY],
          bip_counter = 0,
@@ -76,6 +87,8 @@ void CACHE::llc_update_replacement_state(uint32_t cpu, uint32_t set, uint32_t wa
 		return;
 	}
 
+    lru_update(set, way, type, hit);
+
 	// cache miss
     int leader = is_it_leader(cpu, set);
 
@@ -108,19 +121,26 @@ void CACHE::llc_update_replacement_state(uint32_t cpu, uint32_t set, uint32_t wa
 }
 
 // find replacement victim
-uint32_t CACHE::llc_find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type)
+uint32_t CACHE::llc_find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type)
 {
     // look for the maxRRPV line
     while (1)
     {
-        for (int i=0; i<LLC_WAY; i++)
-            if (rrpv[set][i] == maxRRPV)
-                return i;
-
-        for (int i=0; i<LLC_WAY; i++)
-            rrpv[set][i]++;
+        for (int i=0; i<LLC_WAY; i++){
+	        //int64_t idx = current_set[i].address;
+	        //idx = idx & (int64_t)BIT_MASK;
+            if (rrpv[set][i] == maxRRPV){	
+		        if(current_set[i].pin == 0 ) // no pin
+                	    return i;
+            }		
+	    }
+        for (int i=0; i<LLC_WAY; i++){
+		    if(rrpv[set][i] < maxRRPV){
+            	rrpv[set][i]++;
+		    }
+	    }
     }
-
+    
     // WE SHOULD NOT REACH HERE
     assert(0);
     return 0;
@@ -130,4 +150,29 @@ uint32_t CACHE::llc_find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, c
 void CACHE::llc_replacement_final_stats()
 {
 
+}
+
+uint32_t CACHE::pin_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type)
+{
+
+    return std::distance(current_set, std::max_element(current_set, std::next(current_set, NUM_WAY), pin_comparator<BLOCK, BLOCK>()));
+}
+
+
+void CACHE::lru_update(uint32_t set, uint32_t way, uint32_t type, uint8_t hit)
+{
+    if (hit && type == WRITEBACK)
+        return;
+
+    auto begin = std::next(block.begin(), set*NUM_WAY);
+    auto end   = std::next(begin, NUM_WAY);
+    uint32_t hit_lru = std::next(begin, way)->lru;
+    std::for_each(begin, end, [hit_lru](BLOCK &x){ if (x.lru <= hit_lru) x.lru++; });
+    std::next(begin, way)->lru = 0; // promote to the MRU position
+}
+
+
+uint32_t CACHE::llc_find_pin_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type)
+{
+    return pin_victim(cpu, instr_id, set, current_set, ip, full_addr, type);;
 }

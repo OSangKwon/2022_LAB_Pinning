@@ -18,7 +18,7 @@ uint32_t CACHE::llc_lru_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, co
     return std::distance(current_set, std::max_element(current_set, std::next(current_set, NUM_WAY), llc_lru_comparator<BLOCK, BLOCK>()));
 
 }
-
+/*
 uint32_t CACHE::pin_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type)
 {
 
@@ -37,6 +37,7 @@ void CACHE::lru_update(uint32_t set, uint32_t way, uint32_t type, uint8_t hit)
     std::for_each(begin, end, [hit_lru](BLOCK &x){ if (x.lru <= hit_lru) x.lru++; });
     std::next(begin, way)->lru = 0; // promote to the MRU position
 }
+*/
 
 void CACHE::lru_final_stats()
 {

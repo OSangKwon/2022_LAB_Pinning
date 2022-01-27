@@ -8,6 +8,7 @@
 
 #include "delay_queue.hpp"
 #include "memory_class.h"
+#include <map>
 
 // CACHE TYPE
 #define IS_ITLB 0
@@ -33,6 +34,12 @@ class CACHE : public MemoryRequestConsumer, public MemoryRequestProducer {
     const uint32_t NUM_SET, NUM_WAY, WQ_SIZE, RQ_SIZE, PQ_SIZE, MSHR_SIZE;
     const uint32_t HIT_LATENCY, FILL_LATENCY;
     std::vector<BLOCK> block{NUM_SET*NUM_WAY};
+    std::vector<uint64_t> translation_access{NUM_SET};
+    std::vector<uint64_t> pin_threshold_state{NUM_SET};
+     std::vector<uint64_t> pin_threshold{NUM_SET};
+    std::vector<uint64_t> translation_access_sum{NUM_SET};
+    uint64_t translation_access_cnt = 0;
+
     int fill_level = -1;
     const uint32_t MAX_READ, MAX_WRITE;
     uint32_t reads_available_this_cycle, writes_available_this_cycle;
@@ -151,9 +158,9 @@ class CACHE : public MemoryRequestConsumer, public MemoryRequestProducer {
     std::function<void(uint32_t, uint32_t, uint32_t, uint64_t, uint64_t, uint64_t, uint32_t, uint8_t)> update_replacement_state;
     void llc_update_replacement_state(uint32_t cpu, uint32_t set, uint32_t way, uint64_t full_addr, uint64_t ip, uint64_t victim_addr, uint32_t type, uint8_t hit);
 
-    std::function<uint32_t(uint32_t, uint64_t, uint32_t, const BLOCK*, uint64_t, uint64_t, uint32_t)> find_victim;
-    std::function<uint32_t(uint32_t, uint64_t, uint32_t, const BLOCK*, uint64_t, uint64_t, uint32_t)> find_pin_victim;
-    uint32_t llc_find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type);
+    std::function<uint32_t(uint32_t, uint64_t, uint32_t,  BLOCK*, uint64_t, uint64_t, uint32_t)> find_victim;
+    std::function<uint32_t(uint32_t, uint64_t, uint32_t,  BLOCK*, uint64_t, uint64_t, uint32_t)> find_pin_victim;
+    uint32_t llc_find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set,  BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type);
     uint32_t llc_find_pin_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type);
 
 

@@ -14,9 +14,42 @@ extern uint8_t knob_cloudsuite;
 extern uint8_t MAX_INSTR_DESTINATIONS;
 
 extern VirtualMemory vmem;
+extern CACHE LLC;
 
 void O3_CPU::initialize_core()
 {
+
+}
+
+void O3_CPU::update_pin_threshold(CACHE *cache)
+{
+    int i;
+
+    cache->translation_access_cnt += 1;
+
+    for(i=0;i<cache->NUM_SET; i++)
+    {
+        cache->translation_access_sum[i] += cache->translation_access[i];
+        double mean = 0;
+        mean = (double)cache->translation_access_sum[i];
+        mean = mean / (double)cache->translation_access_cnt;
+        if(cache->translation_access[i] > mean)
+            cache->pin_threshold_state[i] = 1;
+        else
+            cache->pin_threshold_state[i] = 0;
+
+        if(cache->pin_threshold_state[i] == 1 && cache->pin_threshold[i]< 14)
+        {
+            cache->pin_threshold[i] += 1;
+        }
+        else
+        {
+            if(cache->pin_threshold[i] != 0)
+                cache->pin_threshold[i] -= 1;
+        }
+    }
+
+    fill(cache->translation_access.begin(), cache->translation_access.end(), 0);
 
 }
 
@@ -1274,6 +1307,14 @@ void O3_CPU::retire_rob()
         ROB.pop_front();
         completed_executions--;
         num_retired++;
+        if(warmup_complete[cpu])
+        {
+            interval ++;
+            if(interval > 1000000){
+                update_pin_threshold(&LLC);
+                interval = 0;
+            }
+        }
     }
 }
 

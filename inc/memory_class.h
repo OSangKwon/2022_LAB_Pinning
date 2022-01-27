@@ -25,10 +25,10 @@ class BLOCK {
   public:
     bool valid = false,
          prefetch = false,
-         dirty = false,
-         pin = false;
-
+         dirty = false;
+    uint8_t pin = 0;
     uint8_t pin_cnt = 0;
+    uint8_t pin_threshold = 0;
 
     uint64_t address = 0,
              full_addr = 0,
